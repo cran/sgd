@@ -6,6 +6,7 @@
 #     X ~ Normal(0, 1)
 #     theta = (5,...,5)
 #     epsilon ~ Normal(0,1)
+#
 # Dimensions:
 #   N=1e5 observations
 #   d=1e2 parameters
@@ -17,6 +18,7 @@ N <- 1e5
 d <- 1e2
 
 # Generate data.
+set.seed(42)
 X <- matrix(rnorm(N*d), ncol=d)
 theta <- rep(5, d+1)
 eps <- rnorm(N)
@@ -24,4 +26,5 @@ y <- cbind(1, X) %*% theta + eps
 dat <- data.frame(y=y, x=X)
 
 sgd.theta <- sgd(y ~ ., data=dat, model="lm")
-sgd.theta$coefficients
+
+plot(sgd.theta, theta, type="mse-param")
