@@ -1,8 +1,8 @@
 #ifndef DATA_DATA_SET_H
 #define DATA_DATA_SET_H
 
-#include "basedef.h"
-#include "data/data_point.h"
+#include "../basedef.h"
+#include "data_point.h"
 
 // wrapper around R's RNG such that we get a uniform distribution over
 // [0,n) as required by the STL algorithm
@@ -21,7 +21,7 @@ class data_set {
    */
 public:
   data_set(const SEXP& xpMat, const mat& Xx, const mat& Yy, unsigned n_passes,
-    bool big, bool shuffle) : xpMat_(xpMat), Y(Yy), big(big), shuffle_(shuffle) {
+    bool big, bool shuffle) : Y(Yy), big(big), xpMat_(xpMat), shuffle_(shuffle) {
     if (!big) {
       X = Xx;
       n_samples = X.n_rows;

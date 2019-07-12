@@ -1,9 +1,9 @@
 #ifndef LEARN_RATE_DDIM_LEARN_RATE_H
 #define LEARN_RATE_DDIM_LEARN_RATE_H
 
-#include "basedef.h"
-#include "learn-rate/base_learn_rate.h"
-#include "learn-rate/learn_rate_value.h"
+#include "../basedef.h"
+#include "base_learn_rate.h"
+#include "learn_rate_value.h"
 
 class ddim_learn_rate : public base_learn_rate {
   /**
@@ -45,10 +45,10 @@ public:
 private:
   unsigned d_;
   vec Idiag_;
+  double eta_;
   double a_;
   double b_;
   double c_;
-  double eta_;
   double eps_;
   learn_rate_value v_;
 };

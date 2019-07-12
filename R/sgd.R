@@ -118,8 +118,10 @@
 #' \item{converged}{logical. Was the algorithm judged to have converged?}
 #' \item{estimates}{estimates from algorithm stored at each iteration
 #'     specified in \code{pos}}
+#' \item{fitted.values}{the fitted mean values}
 #' \item{pos}{vector of indices specifying the iteration number each estimate
 #'     was stored for}
+#' \item{residuals}{the residuals, that is response minus fitted values}
 #' \item{times}{vector of times in seconds it took to complete the number of
 #'     iterations specified in \code{pos}}
 #' \item{model.out}{a list of model-specific output attributes}
@@ -156,11 +158,12 @@
 #' Wei Xu. Towards optimal one pass large scale learning with averaged
 #' stochastic gradient descent. arXiv preprint arXiv:1107.2490, 2011.
 #'
+#'  # Dimensions
 #' @examples
 #' ## Linear regression
 #' set.seed(42)
 #' N <- 1e4
-#' d <- 10
+#' d <- 5
 #' X <- matrix(rnorm(N*d), ncol=d)
 #' theta <- rep(5, d+1)
 #' eps <- rnorm(N)
@@ -169,25 +172,12 @@
 #' sgd.theta <- sgd(y ~ ., data=dat, model="lm")
 #' sprintf("Mean squared error: %0.3f", mean((theta - as.numeric(sgd.theta$coefficients))^2))
 #'
-#' ## Wine quality (Cortez et al., 2009): Logistic regression
-#' set.seed(42)
-#' data("winequality")
-#' dat <- winequality
-#' dat$quality <- as.numeric(dat$quality > 5) # transform to binary
-#' test.set <- sample(1:nrow(dat), size=nrow(dat)/8, replace=FALSE)
-#' dat.test <- dat[test.set, ]
-#' dat <- dat[-test.set, ]
-#' sgd.theta <- sgd(quality ~ ., data=dat,
-#'                model="glm", model.control=binomial(link="logit"),
-#'                sgd.control=list(reltol=1e-5, npasses=200),
-#'                  lr.control=c(scale=1, gamma=1, alpha=30, c=1))
-#' sgd.theta
 #'
 #' @useDynLib sgd
 #' @import MASS
 #' @importFrom methods new
 #' @importFrom Rcpp evalCpp
-#' @importFrom stats gaussian is.empty.model model.matrix model.response rnorm
+#' @importFrom stats gaussian is.empty.model model.matrix model.response rnorm coef fitted predict
 
 ################################################################################
 # Classes
@@ -243,19 +233,6 @@ sgd.formula <- function(formula, data, model,
   # 3. Pass into sgd.matrix().
   return(sgd.matrix(X, Y, model, model.control, sgd.control))
 }
-
-#' @export
-#' @rdname sgd
-sgd.function <- function(x, ...) {
-}
-#sgd.function <- function(x, gr=NULL, X, y,
-#                         nparams,
-#                         sgd.control=list(...),
-#                         ...) {
-#  model <- "gmm"
-#  model.control <- list(model="gmm", fn=fn, gr=gr, d=ncol(X), nparams=nparams)
-#  return(sgd.matrix(X, y, model, model.control, sgd.control))
-#}
 
 #' @export
 #' @rdname sgd
@@ -351,6 +328,8 @@ fit <- function(x, y, model,
   out$pos <- as.vector(out$pos)
   #out$times <- as.vector(out$times) + (proc.time()[3] - time_start) # C++ time + R time
   out$times <- as.vector(out$times)
+  out$fitted.values <- predict(out, x, type="response")
+  out$residuals <- y - fitted(out)
   return(out)
 }
 
@@ -493,6 +472,8 @@ valid_model_control <- function(model, model.control=list(...), ...) {
     control.loss <-  model.control$loss
     if (is.null(control.loss)) {
       control.loss <- "huber"
+    } else if (!is.character(control.loss)) {
+      stop ("'model.control$loss' must be a string")
     } else if (control.loss != "huber") {
       stop ("'loss' not available")
     }
@@ -677,6 +658,10 @@ valid_implicit_control <- function(delta=30L, ...) {
   #
   # Args:
   #   delta: convergence criterion for the one-dimensional optimization
+  args <- list(...)
+  if (!is.null(names(args))) {
+    stop("Invalid args passed into sgd.control through dots")
+  }
   if (!is.numeric(delta) || delta - as.integer(delta) != 0 || delta <= 0) {
     stop("value of 'delta' must be integer > 0")
   }
