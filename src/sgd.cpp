@@ -16,7 +16,8 @@
 
 // [[Rcpp::depends(BH)]]
 // [[Rcpp::depends(RcppArmadillo)]]
-// [[Rcpp::plugins(cpp11)]]
+// [[Rcpp::plugins(cpp1y)]]
+
 
 template<typename MODEL, typename SGD>
 Rcpp::List run(const data_set& data, MODEL& model, SGD& sgd);
@@ -30,7 +31,6 @@ Rcpp::List run(const data_set& data, MODEL& model, SGD& sgd);
  */
 // [[Rcpp::export]]
 Rcpp::List run(SEXP dataset, SEXP model_control, SEXP sgd_control) {
-  boost::timer ti;
   Rcpp::List Dataset(dataset);
   Rcpp::List Model_control(model_control);
   Rcpp::List Sgd_control(sgd_control);
@@ -53,16 +53,16 @@ Rcpp::List run(SEXP dataset, SEXP model_control, SEXP sgd_control) {
     // Construct stochastic gradient method.
     std::string sgd_name = Rcpp::as<std::string>(Sgd_control["method"]);
     if (sgd_name == "sgd" || sgd_name == "asgd") {
-      explicit_sgd sgd(Sgd_control, data.n_samples, ti);
+      explicit_sgd sgd(Sgd_control, data.n_samples);
       return run(data, model, sgd);
     } else if (sgd_name == "implicit" || sgd_name == "ai-sgd") {
-      implicit_sgd sgd(Sgd_control, data.n_samples, ti);
+      implicit_sgd sgd(Sgd_control, data.n_samples);
       return run(data, model, sgd);
     } else if (sgd_name == "momentum") {
-      momentum_sgd sgd(Sgd_control, data.n_samples, ti);
+      momentum_sgd sgd(Sgd_control, data.n_samples);
       return run(data, model, sgd);
     } else if (sgd_name == "nesterov") {
-      nesterov_sgd sgd(Sgd_control, data.n_samples, ti);
+      nesterov_sgd sgd(Sgd_control, data.n_samples);
       return run(data, model, sgd);
     } else {
       Rcpp::Rcout << "error: stochastic gradient method not implemented" << std::endl;
@@ -73,16 +73,16 @@ Rcpp::List run(SEXP dataset, SEXP model_control, SEXP sgd_control) {
     // Construct stochastic gradient method.
     std::string sgd_name = Rcpp::as<std::string>(Sgd_control["method"]);
     if (sgd_name == "sgd" || sgd_name == "asgd") {
-      explicit_sgd sgd(Sgd_control, data.n_samples, ti);
+      explicit_sgd sgd(Sgd_control, data.n_samples);
       return run(data, model, sgd);
     } else if (sgd_name == "implicit" || sgd_name == "ai-sgd") {
-      implicit_sgd sgd(Sgd_control, data.n_samples, ti);
+      implicit_sgd sgd(Sgd_control, data.n_samples);
       return run(data, model, sgd);
     } else if (sgd_name == "momentum") {
-      momentum_sgd sgd(Sgd_control, data.n_samples, ti);
+      momentum_sgd sgd(Sgd_control, data.n_samples);
       return run(data, model, sgd);
     } else if (sgd_name == "nesterov") {
-      nesterov_sgd sgd(Sgd_control, data.n_samples, ti);
+      nesterov_sgd sgd(Sgd_control, data.n_samples);
       return run(data, model, sgd);
     } else {
       Rcpp::Rcout << "error: stochastic gradient method not implemented" << std::endl;
@@ -93,16 +93,16 @@ Rcpp::List run(SEXP dataset, SEXP model_control, SEXP sgd_control) {
     // Construct stochastic gradient method.
     std::string sgd_name = Rcpp::as<std::string>(Sgd_control["method"]);
     if (sgd_name == "sgd" || sgd_name == "asgd") {
-      explicit_sgd sgd(Sgd_control, data.n_samples, ti);
+      explicit_sgd sgd(Sgd_control, data.n_samples);
       return run(data, model, sgd);
     } else if (sgd_name == "implicit" || sgd_name == "ai-sgd") {
-      implicit_sgd sgd(Sgd_control, data.n_samples, ti);
+      implicit_sgd sgd(Sgd_control, data.n_samples);
       return run(data, model, sgd);
     } else if (sgd_name == "momentum") {
-      momentum_sgd sgd(Sgd_control, data.n_samples, ti);
+      momentum_sgd sgd(Sgd_control, data.n_samples);
       return run(data, model, sgd);
     } else if (sgd_name == "nesterov") {
-      nesterov_sgd sgd(Sgd_control, data.n_samples, ti);
+      nesterov_sgd sgd(Sgd_control, data.n_samples);
       return run(data, model, sgd);
     } else {
       Rcpp::Rcout << "error: stochastic gradient method not implemented" << std::endl;
@@ -113,16 +113,16 @@ Rcpp::List run(SEXP dataset, SEXP model_control, SEXP sgd_control) {
     // Construct stochastic gradient method.
     std::string sgd_name = Rcpp::as<std::string>(Sgd_control["method"]);
     if (sgd_name == "sgd" || sgd_name == "asgd") {
-      explicit_sgd sgd(Sgd_control, data.n_samples, ti);
+      explicit_sgd sgd(Sgd_control, data.n_samples);
       return run(data, model, sgd);
     } else if (sgd_name == "implicit" || sgd_name == "ai-sgd") {
-      implicit_sgd sgd(Sgd_control, data.n_samples, ti);
+      implicit_sgd sgd(Sgd_control, data.n_samples);
       return run(data, model, sgd);
     } else if (sgd_name == "momentum") {
-      momentum_sgd sgd(Sgd_control, data.n_samples, ti);
+      momentum_sgd sgd(Sgd_control, data.n_samples);
       return run(data, model, sgd);
     } else if (sgd_name == "nesterov") {
-      nesterov_sgd sgd(Sgd_control, data.n_samples, ti);
+      nesterov_sgd sgd(Sgd_control, data.n_samples);
       return run(data, model, sgd);
     } else {
       Rcpp::Rcout << "error: stochastic gradient method not implemented" << std::endl;
@@ -138,16 +138,16 @@ Rcpp::List run(SEXP dataset, SEXP model_control, SEXP sgd_control) {
   // Construct stochastic gradient method.
   std::string sgd_name = Rcpp::as<std::string>(Sgd_control["method"]);
   if (sgd_name == "sgd" || sgd_name == "asgd") {
-    explicit_sgd sgd(Sgd_control, data.n_samples, ti);
+    explicit_sgd sgd(Sgd_control, data.n_samples);
     return run(data, model, sgd);
   } else if (sgd_name == "implicit" || sgd_name == "ai-sgd") {
-    implicit_sgd sgd(Sgd_control, data.n_samples, ti);
+    implicit_sgd sgd(Sgd_control, data.n_samples);
     return run(data, model, sgd);
   } else if (sgd_name == "momentum") {
-    momentum_sgd sgd(Sgd_control, data.n_samples, ti);
+    momentum_sgd sgd(Sgd_control, data.n_samples);
     return run(data, model, sgd);
   } else if (sgd_name == "nesterov") {
-    nesterov_sgd sgd(Sgd_control, data.n_samples, ti);
+    nesterov_sgd sgd(Sgd_control, data.n_samples);
     return run(data, model, sgd);
   } else {
     Rcpp::Rcout << "error: stochastic gradient method not implemented" << std::endl;
@@ -166,7 +166,7 @@ Rcpp::List run(SEXP dataset, SEXP model_control, SEXP sgd_control) {
 template<typename MODEL, typename SGD>
 Rcpp::List run(const data_set& data, MODEL& model, SGD& sgd) {
   unsigned n_samples = data.n_samples;
-  unsigned n_features = data.n_features;
+  // unsigned n_features = data.n_features;
   unsigned n_passes = sgd.get_n_passes();
 
   bool good_gradient = true;
@@ -248,6 +248,5 @@ Rcpp::List run(const data_set& data, MODEL& model, SGD& sgd) {
     Rcpp::Named("converged") = converged,
     Rcpp::Named("estimates") = sgd.get_estimates(),
     Rcpp::Named("pos") = sgd.get_pos(),
-    Rcpp::Named("times") = sgd.get_times(),
     Rcpp::Named("model.out") = model_out);
 }

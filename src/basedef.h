@@ -8,11 +8,12 @@
 #include <boost/function.hpp>
 #include <boost/math/tools/roots.hpp>
 #include <boost/math/tools/tuple.hpp>
-#include <boost/timer.hpp>
 #include <math.h>
 #include <stdlib.h>
 #include <string>
 #include <vector>
+#include <algorithm>
+#include <random>
 
 using namespace arma;
 

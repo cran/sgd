@@ -1,16 +1,16 @@
 Package: sgd
 Type: Package
 Title: Stochastic Gradient Descent for Scalable Estimation
-Version: 1.1.1
+Version: 1.1.2
 Authors@R: c(
-    person("Junhyung Lyle", "Kim", email = "lylejkim@gmail.com", role = c("cre", "aut")),
+    person("Junhyung Lyle", "Kim", email = "jlylekim@gmail.com", role = c("cre", "aut")),
     person("Dustin", "Tran", role = "aut"),
     person("Panos", "Toulis", role = "aut"),
     person("Tian", "Lian", role = "ctb"),
     person("Ye", "Kuang", role = "ctb"),
     person("Edoardo", "Airoldi", role = "ctb")
     )
-Maintainer: Junhyung Lyle Kim <lylejkim@gmail.com>
+Maintainer: Junhyung Lyle Kim <jlylekim@gmail.com>
 Description: A fast and flexible set of tools for large scale estimation. It
     features many stochastic gradient methods, built-in models, visualization
     tools, automated hyperparameter tuning, model checking, interval estimation,
@@ -23,9 +23,10 @@ Suggests: bigmemory, glmnet, gridExtra, R.rsp, testthat
 LinkingTo: BH, bigmemory, Rcpp, RcppArmadillo
 LazyData: yes
 VignetteBuilder: R.rsp
-RoxygenNote: 6.1.1
+Encoding: UTF-8
+RoxygenNote: 7.3.1
 NeedsCompilation: yes
-Packaged: 2019-07-12 21:17:49 UTC; lylekim
+Packaged: 2024-01-31 13:09:36 UTC; jlylekim
 Author: Junhyung Lyle Kim [cre, aut],
   Dustin Tran [aut],
   Panos Toulis [aut],
@@ -33,4 +34,4 @@ Author: Junhyung Lyle Kim [cre, aut],
   Ye Kuang [ctb],
   Edoardo Airoldi [ctb]
 Repository: CRAN
-Date/Publication: 2019-07-12 22:11:28 UTC
+Date/Publication: 2024-01-31 13:50:02 UTC

@@ -16,7 +16,7 @@ class base_sgd {
    * @param ti        timer for benchmarking how long to get each estimate
    */
 public:
-  base_sgd(Rcpp::List sgd, unsigned n_samples, const boost::timer& ti) : ti_(ti) {
+  base_sgd(Rcpp::List sgd, unsigned n_samples) {
     name_ = Rcpp::as<std::string>(sgd["method"]);
     n_params_ = Rcpp::as<unsigned>(sgd["nparams"]);
     reltol_ = Rcpp::as<double>(sgd["reltol"]);
@@ -24,7 +24,6 @@ public:
     size_ = Rcpp::as<unsigned>(sgd["size"]);
     estimates_ = zeros<mat>(n_params_, size_);
     last_estimate_ = Rcpp::as<mat>(sgd["start"]);
-    times_ = zeros<vec>(size_);
     t_ = 0;
     n_recorded_ = 0;
     pos_ = Mat<unsigned>(1, size_);
@@ -82,9 +81,6 @@ public:
   mat get_last_estimate() const {
     return last_estimate_;
   }
-  vec get_times() const {
-    return times_;
-  }
   Mat<unsigned> get_pos() const {
     return pos_;
   }
@@ -124,16 +120,30 @@ public:
   //mat update(unsigned t, const mat& theta_old, const data_set& data,
   //MODEL& model, bool& good_gradient);
 
+  // base_sgd& operator=(const mat& theta_new) {
+  //   last_estimate_ = theta_new;
+  //   t_ += 1;
+  //   if (t_ == pos_[n_recorded_]) {
+  //     estimates_.col(n_recorded_) = theta_new;
+  //     times_.at(n_recorded_) = ti_.elapsed();
+  //     n_recorded_ += 1;
+  //     while (n_recorded_ < size_ && pos_[n_recorded_-1] == pos_[n_recorded_]) {
+  //       estimates_.col(n_recorded_) = theta_new;
+  //       times_.at(n_recorded_) = times_.at(n_recorded_-1);
+  //       n_recorded_ += 1;
+  //     }
+  //   }
+  //   return *this;
+  // }
+  
   base_sgd& operator=(const mat& theta_new) {
     last_estimate_ = theta_new;
     t_ += 1;
     if (t_ == pos_[n_recorded_]) {
       estimates_.col(n_recorded_) = theta_new;
-      times_.at(n_recorded_) = ti_.elapsed();
       n_recorded_ += 1;
       while (n_recorded_ < size_ && pos_[n_recorded_-1] == pos_[n_recorded_]) {
         estimates_.col(n_recorded_) = theta_new;
-        times_.at(n_recorded_) = times_.at(n_recorded_-1);
         n_recorded_ += 1;
       }
     }
@@ -144,7 +154,6 @@ public:
     // Throw away the space for things that were not recorded.
     pos_.shed_cols(n_recorded_, size_-1);
     estimates_.shed_cols(n_recorded_, size_-1);
-    times_.shed_rows(n_recorded_, size_-1);
   }
 
 protected:
@@ -155,8 +164,6 @@ protected:
   unsigned size_;           // number of estimates to be recorded (log-uniformly)
   mat estimates_;           // collection of stored estimates
   mat last_estimate_;       // last SGD estimate
-  vec times_;               // times to reach each stored estimate
-  boost::timer ti_;         // timer
   base_learn_rate* lr_obj_; // learning rate
   unsigned t_;              // current iteration
   unsigned n_recorded_;     // number of coefs that have been recorded
